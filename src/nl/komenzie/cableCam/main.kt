@@ -44,6 +44,5 @@ fun main() {
         sleep(realTimeIncrementJavaDuration)
 
         cableCamState.update(calculationIncrements)
-        timeState.update(calculationIncrements)
     }
 }
