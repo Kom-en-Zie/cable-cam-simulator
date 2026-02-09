@@ -3,6 +3,7 @@ package nl.komenzie.cableCam
 import nl.komenzie.cableCam.geometry.Line
 import nl.komenzie.cableCam.geometry.Point
 import nl.komenzie.cableCam.parts.motors.MotorState
+import nl.komenzie.cableCam.position.calculateCPos
 import nl.komenzie.cableCam.time.TimeState
 import kotlin.time.Duration
 
@@ -19,7 +20,7 @@ class CableCamState(
 ) {
     val oPos: Point = Point(0.0, 0.0)
     val w: Double get() = aPos.x
-    val cPos: Point get() = TODO("Calculate the cable car position from t1, and t2")
+    val cPos: Point get() = this.calculateCPos()
     val l1: Line get() = Line(oPos, cPos)
     val l2: Line get() = Line(aPos, cPos)
 
