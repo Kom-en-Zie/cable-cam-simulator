@@ -11,7 +11,7 @@ class MotorState(
     val properties: MotorProperties,
     var speed: Double,
 ) {
-  fun getPassedCableLength(deltaTime: Duration): Double {
-    return speed * deltaTime.toSeconds()
-  }
+    fun getPassedCableLength(deltaTime: Duration): Double {
+        return speed * deltaTime.toSeconds()
+    }
 }
