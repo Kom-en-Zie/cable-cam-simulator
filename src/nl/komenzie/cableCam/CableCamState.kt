@@ -18,7 +18,7 @@ class CableCamState(
 ) {
   val oPos: Point = Point(0.0, 0.0)
   val w: Double get() = aPos.x
-  val cPos: Point = TODO("Calculate the cable car position from t1, and t2")
-  var l1: Line = Line(oPos, cPos)
-  var l2: Line = Line(aPos, cPos)
+  val cPos: Point get() = TODO("Calculate the cable car position from t1, and t2")
+  val l1: Line get() = Line(oPos, cPos)
+  val l2: Line get() = Line(aPos, cPos)
 }
