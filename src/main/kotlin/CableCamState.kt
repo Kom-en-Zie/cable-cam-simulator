@@ -36,4 +36,8 @@ class CableCamState(
 
         return this
     }
+
+    fun toJson(): String {
+        return TODO()
+    }
 }
