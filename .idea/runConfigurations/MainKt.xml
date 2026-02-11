@@ -1,8 +1,13 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="MainKt" type="JetRunConfigurationType" nameIsGenerated="true">
+  <configuration default="false" name="MainKt" type="KtorApplicationConfigurationType" factoryName="Ktor" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="nl.komenzie.cableCam.MainKt" />
-    <module name="TestProject.main" />
-    <shortenClasspath name="NONE" />
+    <module name="CableCamSimulation.main" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="nl.komenzie.cableCam.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
     <extension name="net.ashald.envfile">
       <option name="IS_ENABLED" value="false" />
       <option name="IS_SUBST" value="false" />
@@ -13,6 +18,15 @@
         <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
       </ENTRIES>
     </extension>
+    <option name="alternativeJrePath" />
+    <option name="alternativeJrePathEnabled" value="false" />
+    <option name="includeProvidedScope" value="false" />
+    <option name="mainClass" value="nl.komenzie.cableCam.MainKt" />
+    <option name="passParentEnvs" value="true" />
+    <option name="programParameters" value="" />
+    <option name="shortenCommandLine" />
+    <option name="vmParameters" />
+    <option name="workingDirectory" value="$PROJECT_DIR$" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
