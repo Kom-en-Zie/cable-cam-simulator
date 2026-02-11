@@ -42,6 +42,7 @@ fun main() {
 
     while (true) {
         sleep(realTimeIncrementJavaDuration)
+        println("test printje")
 
         cableCamState.update(calculationIncrements)
     }
