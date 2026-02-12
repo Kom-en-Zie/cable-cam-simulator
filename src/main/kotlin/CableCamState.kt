@@ -21,8 +21,8 @@ class CableCamState(
     val oPos: Point = Point(0.0, 0.0)
     val w: Double get() = aPos.x
     val cPos: Point get() = this.calculateCPos()
-    val l1: Line get() = Line(oPos, cPos)
-    val l2: Line get() = Line(aPos, cPos)
+    val l1: Double get() = TODO()
+    val l2: Double get() = TODO()
 
     /**
      * @param deltaTime The time progression that needs to be processed
