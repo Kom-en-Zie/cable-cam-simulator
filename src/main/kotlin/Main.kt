@@ -2,6 +2,7 @@ package nl.komenzie.cableCam
 
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
+import io.ktor.server.http.content.*
 import io.ktor.server.netty.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
@@ -24,6 +25,10 @@ fun main() {
     val server = embeddedServer(Netty, port = 8080) {
         install(WebSockets)
         routing {
+            staticResources("/", "web") {
+                default("index.html")
+            }
+
             webSocket("/data") {
                 while (true) {
                     // Send the current state to the browser every 16ms (~60fps)
