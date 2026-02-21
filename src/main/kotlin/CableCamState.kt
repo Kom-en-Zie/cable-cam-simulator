@@ -22,8 +22,8 @@ class CableCamState(
 ) {
     val oPos: Point = Point(0.0, 0.0)
     val w: Double get() = aPos.x
-    val L1: Double get() = (t2 - t1) / 2
-    val L2: Double get() = (3 * t1 - t2) / 4
+    val lengthL1: Double get() = (t2 - t1) / 2
+    val lengthL2: Double get() = (3 * t1 - t2) / 4
     val cPos: Point get() = this.calculateCPos()
     val l1: Double get() = TODO()
     val l2: Double get() = TODO()
