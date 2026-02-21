@@ -43,6 +43,24 @@ class CableCamState(
     }
 
     fun toJson(): String {
-        return Json.encodeToString(this)
+        val immutable = CableCamStateImmutable(
+            aPos,
+            cHeight,
+            cWidth,
+            carWeight,
+            t1,
+            t2,
+            motor1State,
+            motor2State,
+            timeState,
+            oPos,
+            w,
+            lengthL1,
+            lengthL2,
+            cPos,
+            l1,
+            l2,
+        )
+        return Json.encodeToString(immutable)
     }
 }
