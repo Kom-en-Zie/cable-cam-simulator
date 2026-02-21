@@ -2,6 +2,7 @@ package nl.komenzie.cableCam
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import nl.komenzie.cableCam.geometry.Line
 import nl.komenzie.cableCam.geometry.Point
 import nl.komenzie.cableCam.parts.motors.MotorState
 import nl.komenzie.cableCam.position.calculateCPos
@@ -25,8 +26,8 @@ class CableCamState(
     val lengthL1: Double get() = (t2 - t1) / 2
     val lengthL2: Double get() = (3 * t1 - t2) / 4
     val cPos: Point get() = this.calculateCPos()
-    val l1: Double get() = TODO()
-    val l2: Double get() = TODO()
+    val l1: Line get() = Line(oPos, cPos)
+    val l2: Line get() = Line(aPos, cPos)
 
     /**
      * @param deltaTime The time progression that needs to be processed
