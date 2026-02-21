@@ -3,34 +3,33 @@ package nl.komenzie.cableCam.position
 import nl.komenzie.cableCam.CableCamState
 import nl.komenzie.cableCam.geometry.Line
 import nl.komenzie.cableCam.geometry.Point
-import nl.komenzie.cableCam.parts.motors.MotorState
-import nl.komenzie.cableCam.time.TimeState
-import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sqrt
 
+/**
+ * Calculates cPos with aPos, lengthL1, and lengthL2 and assuming oPos is always (0, 0)
+ *
+ * It achieves this by calculating the intersection point between the circles
+ * oPos with radius lengthL1
+ * and aPos with radius lengthL2
+ * that has the lowest y coordinate.
+ */
 fun CableCamState.calculateCPos(): Point {
-    // You can use all variables inside CableCamState!
-    // Just use this.[variableName], you can use this as every standard variable
-    // The point of this function is to give a (new) value to this.cPos
 
+    /** [d] Distance between oPos and aPos */
+    val d: Double = Line(oPos, aPos).length
 
-    val a = 1 + (aPos.x / aPos.y).pow(2)
-    val b = 2 * (aPos.x / aPos.y) * ((l2.pow(2) - l1.pow(2) - aPos.x.pow(2) - aPos.y.pow(2)) / 2 * aPos.y)
-    val c = ((l2.pow(2) - l1.pow(2) - aPos.x.pow(2) - aPos.y.pow(2)) / 2 * aPos.y).pow(2) - l1.pow(2)
+    /** [a] The distance from the first center to the projection of the intersection points on the line connecting the centers */
+    val a: Double = (lengthL1.pow(2) - lengthL2.pow(2) + d.pow(2)) / (2 * d)
 
-    val x = this.l1l2IntersectionSolve(a, b, c)
-    val y = sqrt(l1.pow(2) - x.pow(2))
+    /** [h] The distance from that line to the intersection points */
+    val h: Double = sqrt(lengthL1.pow(2) - a.pow(2))
+
+    val sgnX: Int = if (aPos.x > 0) 1 else -1
+
+    val y: Double = (a * aPos.y) / d
+    val x: Double = (a * aPos.x + sgnX * aPos.y * h) / d
 
     return Point(x, y)
 
-}
-
-fun CableCamState.l1l2IntersectionSolve(a: Double, b: Double, c: Double): Double {
-
-    val ABCsol1 = -b - sqrt(b.pow(2) - 4 * a * c) / 2 * a
-    val ABCsol2 = -b + sqrt(b.pow(2) - 4 * a * c) / 2 * a
-    val cPosX = min(ABCsol1, ABCsol2)
-
-    return cPosX
 }
