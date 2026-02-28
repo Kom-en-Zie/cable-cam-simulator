@@ -21,7 +21,7 @@ fun CableCamState.calculateCPos(): Point {
     val d: Double = Line(oPos, aPos).length
 
     if (d > (t1 + t2) / 4.0) throw InvalidCableCamStateException("The ropes are shorter than the minimum length required for oPos and aPos")
-    if (d < lengthL1 + lengthL2) throw InvalidCableCamStateException(
+    if (d > lengthL1 + lengthL2) throw InvalidCableCamStateException(
         "The circles of possibilities do not intersect." +
                 " IMPORTANT: This is a math or code error, since the 'd > (t1 + t2) / 4.0' check is already passed"
     )
