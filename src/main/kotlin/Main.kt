@@ -21,6 +21,8 @@ fun main() {
     // 1. Shared state that is thread-safe
     var latestStateJson = ""
 
+    var webClientConnected = false
+
     // 2. Start Ktor in a background thread
     val server = embeddedServer(Netty, port = 8080) {
         install(WebSockets)
@@ -30,6 +32,8 @@ fun main() {
             }
 
             webSocket("/data") {
+                println("Web client has connected!")
+                webClientConnected = true
                 while (true) {
                     // Send the current state to the browser every 16ms (~60fps)
                     send(latestStateJson)
@@ -57,8 +61,8 @@ fun main() {
         .40,
         3.5,
         // TODO: come up with good starting values for t1 & t2
-        75.0,
-        110.0,
+        250.0,
+        415.0,
         MotorState(
             motorProperties,
             0.0,
@@ -72,7 +76,15 @@ fun main() {
 
     while (true) {
         sleep(realTimeIncrementJavaDuration)
-        println("test printje")
+
+        if (!webClientConnected) println("Waiting for a web client to connect...")
+        while (!webClientConnected) sleep(realTimeIncrementJavaDuration)
+
+        print("new input coordinates (t1;t2): ")
+        val manualInput = readln()
+        val (t1, t2) = manualInput.split(";").map { it.toDouble() }
+        cableCamState.t1 = t1
+        cableCamState.t2 = t2
 
         cableCamState.update(calculationIncrements)
         latestStateJson = cableCamState.toJson()
