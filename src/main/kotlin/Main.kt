@@ -25,7 +25,7 @@ fun main() {
     var webClientConnected = false
 
     // 2. Start Ktor in a background thread
-    val server = embeddedServer(Netty, port = 8080) {
+    embeddedServer(Netty, port = 8080) {
         install(WebSockets)
         routing {
             staticResources("/", "web") {
