@@ -8,6 +8,7 @@ import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.delay
+import nl.komenzie.cableCam.exception.InvalidCableCamStateException
 import nl.komenzie.cableCam.geometry.Point
 import nl.komenzie.cableCam.parts.motors.MotorProperties
 import nl.komenzie.cableCam.parts.motors.MotorState
@@ -87,6 +88,11 @@ fun main() {
         cableCamState.t2 = t2
 
         cableCamState.update(calculationIncrements)
-        latestStateJson = cableCamState.toJson()
+
+        try {
+            latestStateJson = cableCamState.toJson()
+        } catch (e: InvalidCableCamStateException) {
+            println("ERROR: " + e.message)
+        }
     }
 }
