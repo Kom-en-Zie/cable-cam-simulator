@@ -1,9 +1,7 @@
+import * as CoordinatesUtil from './rendering/coordinates-utils.js';
+
 const canvas = document.getElementById('simCanvas');
 const ctx = canvas.getContext('2d');
-
-// Simulation settings
-const scale = 15; // 15 pixels per meter
-const padding = 50; // Padding from the edges of the screen
 
 // Adjust canvas resolution
 canvas.width = window.innerWidth;
@@ -11,9 +9,11 @@ canvas.height = window.innerHeight;
 
 const socket = new WebSocket(`ws://${window.location.host}/data`);
 
+let state = {};
+
 socket.onmessage = (event) => {
-    const state = JSON.parse(event.data);
-    console.log(state)
+    state = JSON.parse(event.data);
+    console.log('state: ', state);
     draw(state);
 };
 
@@ -38,10 +38,9 @@ function draw(state) {
  * Inverts Y so that 0 is at the bottom.
  */
 function toCanvas(point) {
-    return {
-        x: padding + (point.x * scale),
-        y: canvas.height - padding - (point.y * scale)
-    };
+    console.info('point: ', point);
+    console.info('canvasPoint: ', CoordinatesUtil.pointToCanvasPoint(point, state.aPos));
+    return CoordinatesUtil.pointToCanvasPoint(point, state.aPos);
 }
 
 function drawSupportLine(p1, p2) {
