@@ -57,8 +57,8 @@ fun main() {
         .40,
         3.5,
         // TODO: come up with good starting values for t1 & t2
-        110.0,
         75.0,
+        110.0,
         MotorState(
             motorProperties,
             0.0,
