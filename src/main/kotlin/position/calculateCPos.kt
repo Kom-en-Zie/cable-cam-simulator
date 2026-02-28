@@ -4,6 +4,7 @@ import nl.komenzie.cableCam.CableCamState
 import nl.komenzie.cableCam.exception.InvalidCableCamStateException
 import nl.komenzie.cableCam.geometry.Line
 import nl.komenzie.cableCam.geometry.Point
+import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
