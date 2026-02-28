@@ -12,6 +12,6 @@ export function pointToCanvasPoint(point, aPos) {
 
     return {
         x: oPos.x + point.x * ratio,
-        y: oPos.y + point.y * ratio,
+        y: oPos.y - point.y * ratio,
     };
 }
