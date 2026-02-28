@@ -1,6 +1,7 @@
 package nl.komenzie.cableCam.position
 
 import nl.komenzie.cableCam.CableCamState
+import nl.komenzie.cableCam.exception.InvalidCableCamStateException
 import nl.komenzie.cableCam.geometry.Line
 import nl.komenzie.cableCam.geometry.Point
 import kotlin.math.pow
@@ -18,6 +19,8 @@ fun CableCamState.calculateCPos(): Point {
 
     /** [d] Distance between oPos and aPos */
     val d: Double = Line(oPos, aPos).length
+
+    if (d > (t1 + t2) / 4.0) throw InvalidCableCamStateException("The ropes are shorter than the minimum length required for oPos and aPos")
 
     /** [a] The distance from the first center to the projection of the intersection points on the line connecting the centers */
     val a: Double = (lengthL1.pow(2) - lengthL2.pow(2) + d.pow(2)) / (2 * d)
