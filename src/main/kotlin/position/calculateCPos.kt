@@ -36,11 +36,22 @@ fun CableCamState.calculateCPos(): Point {
     /** [h] The distance from that line to the intersection points */
     val h: Double = sqrt(lengthL1.pow(2) - a.pow(2))
 
-    val sgnX: Int = if (aPos.x > 0) 1 else -1
+    // 1. Find the point P2 (the projection point on the line between centers)
+    val x2 = oPos.x + a * (aPos.x - oPos.x) / d
+    val y2 = oPos.y + a * (aPos.y - oPos.y) / d
 
-    val y: Double = (a * aPos.y) / d
-    val x: Double = (a * aPos.x + sgnX * aPos.y * h) / d
+    // 2. Determine the two possible intersection points using the perpendicular vector
+    // The vector (aPos.x - oPos.x, aPos.y - oPos.y) is the line direction.
+    // The perpendicular vector is (-(aPos.y - oPos.y), (aPos.x - oPos.x))
 
-    return Point(x, y)
+    val rx = -(aPos.y - oPos.y) * (h / d)
+    val ry = (aPos.x - oPos.x) * (h / d)
+
+    // Two possible points
+    val p1 = Point(x2 + rx, y2 + ry)
+    val p2 = Point(x2 - rx, y2 - ry)
+    val p = if (p1.y < p2.y) p1 else p2
+
+    return p
 
 }
