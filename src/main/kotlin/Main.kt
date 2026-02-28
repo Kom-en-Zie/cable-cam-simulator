@@ -83,9 +83,13 @@ fun main() {
 
         print("new input coordinates (t1;t2): ")
         val manualInput = readln()
-        val (t1, t2) = manualInput.split(";").map { it.toDouble() }
-        cableCamState.t1 = t1
-        cableCamState.t2 = t2
+        try {
+            val (t1, t2) = manualInput.split(";").map { it.toDouble() }
+            cableCamState.t1 = t1
+            cableCamState.t2 = t2
+        } catch (_: NumberFormatException) {
+            println("invalid input format, please enter t1;t2")
+        }
 
         cableCamState.update(calculationIncrements)
 
