@@ -62,8 +62,8 @@ fun main() {
         .40,
         3.5,
         // TODO: come up with good starting values for t1 & t2
-        250.0,
-        415.0,
+        75.0,
+        110.0,
         MotorState(
             motorProperties,
             0.0,
@@ -76,6 +76,12 @@ fun main() {
     )
 
     while (true) {
+        try {
+            latestStateJson = cableCamState.toJson()
+        } catch (e: InvalidCableCamStateException) {
+            println("ERROR: " + e.message)
+        }
+
         sleep(realTimeIncrementJavaDuration)
 
         if (!webClientConnected) println("Waiting for a web client to connect...")
@@ -92,11 +98,5 @@ fun main() {
         }
 
         cableCamState.update(calculationIncrements)
-
-        try {
-            latestStateJson = cableCamState.toJson()
-        } catch (e: InvalidCableCamStateException) {
-            println("ERROR: " + e.message)
-        }
     }
 }
