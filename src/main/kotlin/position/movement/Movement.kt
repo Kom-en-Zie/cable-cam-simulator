@@ -6,6 +6,7 @@ import kotlin.time.Duration
 abstract class Movement(
     val cPosStart: Point,
     val cPosEnd: Point,
+    val initialMovement: MovementVector,
     val startTime: Duration,
     val speed: Double,
     val acceleration: Double,
