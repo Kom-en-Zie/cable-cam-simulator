@@ -17,9 +17,9 @@ abstract class Movement(
      * @param relativeTime The time progression that needs to be processed (currentTime - startTime)
      * @return The point on which the cPos should be on that time instance
      */
-    abstract fun changePropertiesRelative(relativeTime: Duration): Point
+    abstract fun calculateDesiredPositionRelative(relativeTime: Duration): Point
 
-    fun changeProperties(currentTime: Duration): Point {
-        return changePropertiesRelative(currentTime - startTime)
+    fun calculatedDesiredPosition(currentTime: Duration): Point {
+        return calculateDesiredPositionRelative(currentTime - startTime)
     }
 }

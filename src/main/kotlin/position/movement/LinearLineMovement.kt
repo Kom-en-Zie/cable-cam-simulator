@@ -13,7 +13,7 @@ class LinearLineMovement(
     acceleration: Double,
 ) : Movement(cPosStart, cPosEnd, initialMovement, startTime, speed, acceleration) {
 
-    override fun changePropertiesRelative(relativeTime: Duration): Point {
+    override fun calculateDesiredPositionRelative(relativeTime: Duration): Point {
         TODO("Not yet implemented")
     }
 }
