@@ -1,4 +1,4 @@
-package nl.komenzie.cableCam.position.movement
+package nl.komenzie.cableCam.movementVector
 
 import kotlinx.serialization.Serializable
 import nl.komenzie.cableCam.geometry.Angle
