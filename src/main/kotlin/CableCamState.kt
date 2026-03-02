@@ -6,8 +6,9 @@ import nl.komenzie.cableCam.geometry.Line
 import nl.komenzie.cableCam.geometry.Point
 import nl.komenzie.cableCam.parts.motors.MotorState
 import nl.komenzie.cableCam.position.calculateCPos
+import nl.komenzie.cableCam.position.calculateL1
+import nl.komenzie.cableCam.position.calculateL2
 import nl.komenzie.cableCam.time.TimeState
-import kotlin.math.abs
 import kotlin.time.Duration
 
 @Serializable
@@ -24,8 +25,8 @@ class CableCamState(
 ) {
     val oPos: Point = Point(0.0, 0.0)
     val w: Double get() = aPos.x
-    val lengthL1: Double get() = abs((t2 - t1) / 2)
-    val lengthL2: Double get() = abs((3 * t1 - t2) / 4)
+    val lengthL1: Double get() = this.calculateL1()
+    val lengthL2: Double get() = this.calculateL2()
     val cPos: Point get() = this.calculateCPos()
     val l1: Line get() = Line(oPos, cPos)
     val l2: Line get() = Line(aPos, cPos)
