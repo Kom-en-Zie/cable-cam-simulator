@@ -26,13 +26,8 @@ fun CableCamState.calculateCPos(t1: Double? = null, t2: Double? = null): Point {
     val d: Double = Line(oPos, aPos).length
 
     if (d > (t1Local + t2Local) / 4.0) throw InvalidCableCamStateException("The ropes are shorter than the minimum length required for oPos and aPos")
-    if (d > l1Local + l2Local) throw InvalidCableCamStateException(
-        "The circles of possibilities do not intersect." +
-                " IMPORTANT: This is a math or code error, since the 'd > (t1 + t2) / 4.0' check is already passed"
-    )
-    if (d < abs(l1Local - l2Local)) throw InvalidCableCamStateException(
-        "The circles of possibilities do not intersect. (one circle is within the other one)"
-    )
+    if (d > l1Local + l2Local) throw InvalidCableCamStateException("The circles of possibilities do not intersect. IMPORTANT: This is a math or code error, since the 'd > (t1 + t2) / 4.0' check is already passed")
+    if (d < abs(l1Local - l2Local)) throw InvalidCableCamStateException("The circles of possibilities do not intersect. (one circle is within the other one)")
 
     /** [a] The distance from the first center to the projection of the intersection points on the line connecting the centers */
     val a: Double = (l1Local.pow(2) - l2Local.pow(2) + d.pow(2)) / (2 * d)
