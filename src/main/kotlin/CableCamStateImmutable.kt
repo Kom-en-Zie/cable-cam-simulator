@@ -3,6 +3,7 @@ package nl.komenzie.cableCam
 import kotlinx.serialization.Serializable
 import nl.komenzie.cableCam.geometry.Line
 import nl.komenzie.cableCam.geometry.Point
+import nl.komenzie.cableCam.movementVector.MovementVector
 import nl.komenzie.cableCam.parts.motors.MotorState
 import nl.komenzie.cableCam.time.TimeState
 
@@ -24,4 +25,5 @@ data class CableCamStateImmutable(
     val cPos: Point,
     val l1: Line,
     val l2: Line,
+    val movementVector: MovementVector,
 )
