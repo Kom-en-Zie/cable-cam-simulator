@@ -1,9 +1,9 @@
 package nl.komenzie.cableCam.cartState
 
 import nl.komenzie.cableCam.geometry.Point
-import nl.komenzie.cableCam.position.movement.Movement
+import nl.komenzie.cableCam.movementVector.MovementVector
 
 data class CartState(
     val position: Point,
-    val movement: Movement,
+    val movementVector: MovementVector,
 )
