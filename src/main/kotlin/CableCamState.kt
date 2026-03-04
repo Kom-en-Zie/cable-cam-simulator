@@ -69,6 +69,7 @@ class CableCamState(
             cPos,
             l1,
             l2,
+            movementVector
         )
         return Json.encodeToString(immutable)
     }
