@@ -2,8 +2,11 @@ package nl.komenzie.cableCam
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import nl.komenzie.cableCam.cartState.CartState
 import nl.komenzie.cableCam.geometry.Line
 import nl.komenzie.cableCam.geometry.Point
+import nl.komenzie.cableCam.movementVector.MovementVector
+import nl.komenzie.cableCam.movementVector.calculateMovementVector
 import nl.komenzie.cableCam.parts.motors.MotorState
 import nl.komenzie.cableCam.position.calculateCPos
 import nl.komenzie.cableCam.position.calculateL1
@@ -30,6 +33,10 @@ class CableCamState(
     val cPos: Point get() = this.calculateCPos()
     val l1: Line get() = Line(oPos, cPos)
     val l2: Line get() = Line(aPos, cPos)
+    val movementVector: MovementVector get() = this.calculateMovementVector()
+
+    // Properties that are not in the ImmutableState
+    val currentCartState: CartState get() = CartState(cPos, movementVector)
 
     /**
      * @param deltaTime The time progression that needs to be processed
