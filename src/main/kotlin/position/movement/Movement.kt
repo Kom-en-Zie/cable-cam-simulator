@@ -1,5 +1,6 @@
 package nl.komenzie.cableCam.position.movement
 
+import nl.komenzie.cableCam.cartState.CartState
 import nl.komenzie.cableCam.geometry.Point
 import kotlin.time.Duration
 
@@ -15,9 +16,9 @@ abstract class Movement(
      * @param relativeTime The time progression that needs to be processed (currentTime - startTime)
      * @return The point on which the cPos should be on that time instance
      */
-    abstract fun calculateDesiredPositionRelative(relativeTime: Duration): Point
+    abstract fun calculateDesiredPositionState(relativeTime: Duration): CartState
 
-    fun calculatedDesiredPosition(currentTime: Duration): Point {
-        return calculateDesiredPositionRelative(currentTime - startTime)
+    fun calculatedDesiredState(currentTime: Duration): CartState {
+        return calculateDesiredPositionState(currentTime - startTime)
     }
 }
