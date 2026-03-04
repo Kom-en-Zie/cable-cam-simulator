@@ -1,5 +1,6 @@
 package nl.komenzie.cableCam.position.movement
 
+import nl.komenzie.cableCam.cartState.CartState
 import nl.komenzie.cableCam.geometry.Point
 import kotlin.time.Duration
 
@@ -11,7 +12,7 @@ class LinearLineMovement(
     acceleration: Double,
 ) : Movement(cPosStart, cPosEnd, startTime, speed, acceleration) {
 
-    override fun calculateDesiredPositionRelative(relativeTime: Duration): Point {
+    override fun calculateDesiredPositionState(relativeTime: Duration): CartState {
         TODO("Not yet implemented")
     }
 }
