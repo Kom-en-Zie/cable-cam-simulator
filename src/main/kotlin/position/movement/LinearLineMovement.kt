@@ -12,7 +12,7 @@ class LinearLineMovement(
     acceleration: Double,
 ) : Movement(cPosStart, cPosEnd, startTime, speed, acceleration) {
 
-    override fun calculateDesiredPositionState(relativeTime: Duration): CartState {
+    override fun calculateDesiredCartState(relativeTime: Duration): CartState {
         TODO("Not yet implemented")
     }
 }
