@@ -16,9 +16,9 @@ abstract class Movement(
      * @param relativeTime The time progression that needs to be processed (currentTime - startTime)
      * @return The point on which the cPos should be on that time instance
      */
-    abstract fun calculateDesiredCartState(relativeTime: Duration): CartState
+    abstract fun calculateDesiredCartStateRelative(relativeTime: Duration): CartState
 
-    fun calculatedCartState(currentTime: Duration): CartState {
-        return calculateDesiredCartState(currentTime - startTime)
+    fun calculatedDesiredCartState(currentTime: Duration): CartState {
+        return calculateDesiredCartStateRelative(currentTime - startTime)
     }
 }
