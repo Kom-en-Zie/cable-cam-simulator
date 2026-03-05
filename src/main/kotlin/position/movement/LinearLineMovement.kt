@@ -24,7 +24,7 @@ class LinearLineMovement(
     val topSpeedTravelingTime = topSpeedTravelingDistance / speed
     val totalTime = 2 * accelerationTime + topSpeedTravelingTime
 
-    override fun calculateDesiredCartState(relativeTime: Duration): CartState {
+    override fun calculateDesiredCartStateRelative(relativeTime: Duration): CartState {
         if (relativeTime.toSeconds() >= totalTime) return CartState(cPosEnd, MovementVector(track.angle, 0.0))
 
         val desiredPos = cPosStart + calculateRelativePos(relativeTime)
