@@ -22,10 +22,14 @@ class LinearLineMovement(
     val trackLength = track.length
     val topSpeedTravelingDistance = trackLength - 2 * accelerationDistance
     val topSpeedTravelingTime = topSpeedTravelingDistance / speed
+    val totalTime = 2 * accelerationTime + topSpeedTravelingTime
 
     override fun calculateDesiredCartState(relativeTime: Duration): CartState {
+        if (relativeTime.toSeconds() >= totalTime) return CartState(cPosEnd, MovementVector(track.angle, 0.0))
+
         val desiredPos = cPosStart + calculateRelativePos(relativeTime)
-        val desiredMovementVector = MovementVector(track.angle, TODO("Speed at this relativeTime"))
+        val desiredMovementVector = MovementVector(track.angle, calculateSpeed(relativeTime))
+
         return CartState(desiredPos, desiredMovementVector)
     }
 
@@ -53,5 +57,23 @@ class LinearLineMovement(
 
     private fun calculateAcceleratingDistance(relativeTime: Double): Double {
         return 0.5 * acceleration * relativeTime.pow(2)
+    }
+
+    private fun calculateSpeed(relativeTime: Duration): Double {
+        val time = relativeTime.toSeconds()
+        // Traveling at top speed
+        if (time >= accelerationTime && time <= accelerationTime + topSpeedTravelingTime) return speed
+
+        // Still accelerating
+        if (time < accelerationTime) return time * acceleration
+
+        // Currently decelerating
+        if (time > topSpeedTravelingTime + accelerationTime && time <= totalTime) {
+            val deceleratingTime = time - accelerationTime - topSpeedTravelingTime
+            val acceleratingTimeEquivalent = accelerationTime - deceleratingTime
+            return acceleratingTimeEquivalent * acceleration
+        }
+
+        return 0.0  // Already at end
     }
 }
