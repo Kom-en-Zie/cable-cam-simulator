@@ -8,6 +8,7 @@ import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.delay
+import nl.komenzie.cableCam.cartState.CartConfig
 import nl.komenzie.cableCam.exception.InvalidCableCamStateException
 import nl.komenzie.cableCam.geometry.Point
 import nl.komenzie.cableCam.parts.motors.MotorProperties
@@ -71,6 +72,10 @@ fun main() {
         MotorState(
             motorProperties,
             0.0,
+        ),
+        CartConfig(
+            maxSpeed = 25.0,
+            acceleration = 5.0,
         ),
         timeState,
     )
