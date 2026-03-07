@@ -1,6 +1,7 @@
 package nl.komenzie.cableCam
 
 import kotlinx.serialization.json.Json
+import nl.komenzie.cableCam.cartState.CartConfig
 import nl.komenzie.cableCam.cartState.CartState
 import nl.komenzie.cableCam.geometry.Line
 import nl.komenzie.cableCam.geometry.Point
@@ -23,6 +24,7 @@ class CableCamState(
     var t2: Double,
     val motor1State: MotorState,
     val motor2State: MotorState,
+    val cartConfig: CartConfig,
     val timeState: TimeState = TimeState(),
 ) {
     val oPos: Point = Point(0.0, 0.0)
