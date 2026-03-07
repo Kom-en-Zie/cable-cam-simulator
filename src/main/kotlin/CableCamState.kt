@@ -1,6 +1,5 @@
 package nl.komenzie.cableCam
 
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import nl.komenzie.cableCam.cartState.CartState
 import nl.komenzie.cableCam.geometry.Line
@@ -14,7 +13,6 @@ import nl.komenzie.cableCam.position.calculateL2
 import nl.komenzie.cableCam.time.TimeState
 import kotlin.time.Duration
 
-@Serializable
 class CableCamState(
     val aPos: Point,
     val cHeight: Double,
