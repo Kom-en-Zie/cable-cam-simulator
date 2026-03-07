@@ -8,6 +8,8 @@ import nl.komenzie.cableCam.util.time.toSeconds
 import kotlin.math.pow
 import kotlin.math.sqrt
 import kotlin.time.Duration
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 class LinearLineMovement(
     cPosStart: Point,
@@ -22,10 +24,10 @@ class LinearLineMovement(
     val trackLength = track.length
     val topSpeedTravelingDistance = trackLength - 2 * accelerationDistance
     val topSpeedTravelingTime = topSpeedTravelingDistance / speed
-    val totalTime = 2 * accelerationTime + topSpeedTravelingTime
+    override val totalTime = (2 * accelerationTime + topSpeedTravelingTime).toDuration(DurationUnit.SECONDS)
 
     override fun calculateDesiredCartStateRelative(relativeTime: Duration): CartState {
-        if (relativeTime.toSeconds() >= totalTime) return CartState(cPosEnd, MovementVector(track.angle, 0.0))
+        if (relativeTime >= totalTime) return CartState(cPosEnd, MovementVector(track.angle, 0.0))
 
         val desiredPos = cPosStart + calculateRelativePos(relativeTime)
         val desiredMovementVector = MovementVector(track.angle, calculateSpeed(relativeTime))
@@ -68,7 +70,7 @@ class LinearLineMovement(
         if (time < accelerationTime) return time * acceleration
 
         // Currently decelerating
-        if (time > topSpeedTravelingTime + accelerationTime && time <= totalTime) {
+        if (time > topSpeedTravelingTime + accelerationTime && relativeTime <= totalTime) {
             val deceleratingTime = time - accelerationTime - topSpeedTravelingTime
             val acceleratingTimeEquivalent = accelerationTime - deceleratingTime
             return acceleratingTimeEquivalent * acceleration
