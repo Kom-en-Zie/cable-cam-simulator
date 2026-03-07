@@ -11,6 +11,7 @@ abstract class Movement(
     val speed: Double,
     val acceleration: Double,
 ) {
+    abstract val totalTime: Duration
 
     /**
      * @param relativeTime The time progression that needs to be processed (currentTime - startTime)
