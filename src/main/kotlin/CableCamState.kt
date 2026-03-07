@@ -10,6 +10,7 @@ import nl.komenzie.cableCam.parts.motors.MotorState
 import nl.komenzie.cableCam.position.calculateCPos
 import nl.komenzie.cableCam.position.calculateL1
 import nl.komenzie.cableCam.position.calculateL2
+import nl.komenzie.cableCam.position.movement.queue.MovementQueue
 import nl.komenzie.cableCam.time.TimeState
 import kotlin.time.Duration
 
@@ -35,6 +36,7 @@ class CableCamState(
 
     // Properties that are not in the ImmutableState
     val currentCartState: CartState get() = CartState(cPos, movementVector)
+    val movementQueue: MovementQueue = MovementQueue()
 
     /**
      * @param deltaTime The time progression that needs to be processed
