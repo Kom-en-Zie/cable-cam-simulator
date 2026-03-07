@@ -15,4 +15,8 @@ class MovementQueue(
     fun removeElement(element: Movement) {
         queue.remove(element)
     }
+
+    fun getFirst(): Movement? {
+        return queue.firstOrNull()
+    }
 }
