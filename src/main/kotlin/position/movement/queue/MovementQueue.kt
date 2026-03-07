@@ -4,4 +4,12 @@ import nl.komenzie.cableCam.position.movement.Movement
 
 class MovementQueue {
     private val queue = ArrayDeque<Movement>()
+
+    fun toArray(): Array<Movement> {
+        return queue.toTypedArray()
+    }
+
+    fun removeElement(element: Movement) {
+        queue.remove(element)
+    }
 }
