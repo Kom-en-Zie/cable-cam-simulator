@@ -1,3 +1,5 @@
+import type { Point } from '../../types.js';
+import { Viewport } from '../viewport.js';
 import type { Coordinate } from './coordinate.js';
 
 export interface LineStyle {
@@ -8,11 +10,10 @@ export interface LineStyle {
 }
 
 /**
- * Draws a single stroked line segment between two canvas-space points.
+ * Draws a single stroked line segment in canvas/screen space.
  *
- * All three relevant stroke properties (color, width, dash) are set
- * every call, so prior `setLineDash`/`strokeStyle` state from other
- * drawing code does not leak in.
+ * Color, width, and dash are set on every call so prior context state
+ * cannot leak between segments.
  */
 export function drawLine(
     ctx: CanvasRenderingContext2D,
@@ -28,4 +29,19 @@ export function drawLine(
     ctx.moveTo(from.x, from.y);
     ctx.lineTo(to.x, to.y);
     ctx.stroke();
+}
+
+/**
+ * Same as {@link drawLine}, but takes world-space endpoints and projects
+ * them through the {@link Viewport} singleton — line length therefore
+ * scales with the viewport.
+ */
+export function drawWorldLine(
+    ctx: CanvasRenderingContext2D,
+    from: Point,
+    to: Point,
+    style: LineStyle,
+): void {
+    const vp = Viewport.instance;
+    drawLine(ctx, vp.worldToScreen(from), vp.worldToScreen(to), style);
 }

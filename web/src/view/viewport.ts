@@ -8,15 +8,28 @@ const PADDING_PX = 16;
  * pixel coordinates (Y down). The viewport is sized so the support span
  * (oPos→aPos) fits horizontally inside the canvas with a fixed padding.
  *
- * Construct a new {@link Viewport} per frame from the latest state — it's
- * cheap and keeps the transform free of mutable state.
+ * Singleton: there is one Viewport per browser tab, which is safe — each
+ * connected client runs its own JS runtime. Reconfigured per frame by
+ * {@link Renderer} before any layer draws.
  */
 export class Viewport {
-    private readonly ratio: number;
-    private readonly originX: number;
-    private readonly originY: number;
+    private static singleton: Viewport | null = null;
 
-    constructor(canvasSize: { width: number; height: number }, aPos: Point) {
+    private ratio: number = 0;
+    private originX: number = PADDING_PX;
+    private originY: number = PADDING_PX;
+
+    private constructor() {}
+
+    static get instance(): Viewport {
+        if (Viewport.singleton === null) {
+            Viewport.singleton = new Viewport();
+        }
+        return Viewport.singleton;
+    }
+
+    /** Recompute the transform from the latest canvas size and far-pole position. */
+    configure(canvasSize: { width: number; height: number }, aPos: Point): void {
         const usableWidth = canvasSize.width - PADDING_PX * 2;
         this.ratio = usableWidth / aPos.x;
         this.originX = PADDING_PX;

@@ -1,29 +1,33 @@
 import type { CableCamState } from '../../types.js';
 import type { Layer } from '../renderer.js';
-import type { Viewport } from '../viewport.js';
+import { drawWorldBox } from '../util/draw-box.js';
+import { drawWorldLabel } from '../util/draw-label.js';
 
 const CARRIAGE_COLOR = '#f1c40f';
-const CARRIAGE_HALF_WIDTH_PX = 10;
-const CARRIAGE_HALF_HEIGHT_PX = 5;
+const CARRIAGE_WIDTH_PX = 20;
+const CARRIAGE_HEIGHT_PX = 10;
+const LABEL_FONT = '12px Arial';
+const LABEL_COLOR = 'white';
 const LABEL_OFFSET_X_PX = -20;
 const LABEL_OFFSET_Y_PX = -15;
 
 /** The yellow carriage box plus its coordinate label. */
 export class CarriageLayer implements Layer {
-    draw(ctx: CanvasRenderingContext2D, state: CableCamState, viewport: Viewport): void {
-        const pos = viewport.worldToScreen(state.cPos);
-        const corner = pos.offset(-CARRIAGE_HALF_WIDTH_PX, -CARRIAGE_HALF_HEIGHT_PX);
-        const labelPos = pos.offset(LABEL_OFFSET_X_PX, LABEL_OFFSET_Y_PX);
-
-        ctx.fillStyle = CARRIAGE_COLOR;
-        ctx.fillRect(corner.x, corner.y, CARRIAGE_HALF_WIDTH_PX * 2, CARRIAGE_HALF_HEIGHT_PX * 2);
-
-        ctx.fillStyle = 'white';
-        ctx.font = '12px Arial';
-        ctx.fillText(
+    draw(ctx: CanvasRenderingContext2D, state: CableCamState): void {
+        drawWorldBox(ctx, state.cPos, {
+            color: CARRIAGE_COLOR,
+            width: CARRIAGE_WIDTH_PX,
+            height: CARRIAGE_HEIGHT_PX,
+        });
+        drawWorldLabel(
+            ctx,
+            state.cPos,
             `Cam (${state.cPos.x.toFixed(1)}, ${state.cPos.y.toFixed(1)})`,
-            labelPos.x,
-            labelPos.y,
+            {
+                color: LABEL_COLOR,
+                font: LABEL_FONT,
+                offset: { dx: LABEL_OFFSET_X_PX, dy: LABEL_OFFSET_Y_PX },
+            },
         );
     }
 }
