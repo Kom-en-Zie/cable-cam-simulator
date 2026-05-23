@@ -32,8 +32,20 @@ const renderer = new Renderer(ctx, canvas, [
     new CarriageLayer(),
 ]);
 
+// The WebSocket pushes ~60 messages per second, but we render on the browser's
+// frame clock so resize/animation/interaction work doesn't have to wait for the
+// next message. The handler just publishes the latest snapshot; the rAF loop reads it.
+let latestState: CableCamState | null = null;
+
 const socket = new WebSocket(`ws://${window.location.host}/data`);
 socket.addEventListener('message', (event: MessageEvent<string>) => {
-    const state = JSON.parse(event.data) as CableCamState;
-    renderer.draw(state);
+    latestState = JSON.parse(event.data) as CableCamState;
 });
+
+function tick(): void {
+    if (latestState !== null) {
+        renderer.draw(latestState);
+    }
+    requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
