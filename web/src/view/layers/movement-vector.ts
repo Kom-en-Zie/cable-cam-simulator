@@ -1,7 +1,6 @@
 import type { CableCamState } from '../../types.js';
 import type { Layer } from '../renderer.js';
-import { drawLine } from '../util/draw-line.js';
-import type { Viewport } from '../viewport.js';
+import { drawWorldLine } from '../util/draw-line.js';
 
 const VECTOR_COLOR = 'yellow';
 const VECTOR_WIDTH_PX = 2;
@@ -16,7 +15,7 @@ const VECTOR_WIDTH_PX = 2;
  * Skipped when speed is zero (the segment would degenerate to a point).
  */
 export class MovementVectorLayer implements Layer {
-    draw(ctx: CanvasRenderingContext2D, state: CableCamState, viewport: Viewport): void {
+    draw(ctx: CanvasRenderingContext2D, state: CableCamState): void {
         const { speed, angle } = state.movementVector;
         if (speed === 0) return;
 
@@ -25,11 +24,9 @@ export class MovementVectorLayer implements Layer {
             y: state.cPos.y + speed * Math.sin(angle.radians),
         };
 
-        drawLine(
-            ctx,
-            viewport.worldToScreen(state.cPos),
-            viewport.worldToScreen(tipWorld),
-            { color: VECTOR_COLOR, width: VECTOR_WIDTH_PX },
-        );
+        drawWorldLine(ctx, state.cPos, tipWorld, {
+            color: VECTOR_COLOR,
+            width: VECTOR_WIDTH_PX,
+        });
     }
 }
