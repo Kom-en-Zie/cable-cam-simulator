@@ -12,21 +12,18 @@ const LABEL_OFFSET_Y_PX = -15;
 export class CarriageLayer implements Layer {
     draw(ctx: CanvasRenderingContext2D, state: CableCamState, viewport: Viewport): void {
         const pos = viewport.worldToScreen(state.cPos);
+        const corner = pos.offset(-CARRIAGE_HALF_WIDTH_PX, -CARRIAGE_HALF_HEIGHT_PX);
+        const labelPos = pos.offset(LABEL_OFFSET_X_PX, LABEL_OFFSET_Y_PX);
 
         ctx.fillStyle = CARRIAGE_COLOR;
-        ctx.fillRect(
-            pos.x - CARRIAGE_HALF_WIDTH_PX,
-            pos.y - CARRIAGE_HALF_HEIGHT_PX,
-            CARRIAGE_HALF_WIDTH_PX * 2,
-            CARRIAGE_HALF_HEIGHT_PX * 2,
-        );
+        ctx.fillRect(corner.x, corner.y, CARRIAGE_HALF_WIDTH_PX * 2, CARRIAGE_HALF_HEIGHT_PX * 2);
 
         ctx.fillStyle = 'white';
         ctx.font = '12px Arial';
         ctx.fillText(
             `Cam (${state.cPos.x.toFixed(1)}, ${state.cPos.y.toFixed(1)})`,
-            pos.x + LABEL_OFFSET_X_PX,
-            pos.y + LABEL_OFFSET_Y_PX,
+            labelPos.x,
+            labelPos.y,
         );
     }
 }
