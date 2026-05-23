@@ -1,4 +1,4 @@
-import { padding } from '../constants/coordinates-constants.js';
+import { padding } from './coordinates-constants.js';
 import type { CanvasPoint, Point } from '../types.js';
 
 export function pointToCanvasPoint(point: Point, aPos: Point): CanvasPoint {

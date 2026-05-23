@@ -1,4 +1,4 @@
-import { pointToCanvasPoint } from './rendering/coordinates-utils.js';
+import { pointToCanvasPoint } from './view/coordinates-utils.js';
 import type { CableCamState, CanvasPoint, Point } from './types.js';
 
 function getCanvas(): HTMLCanvasElement {
