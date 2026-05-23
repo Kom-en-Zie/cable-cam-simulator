@@ -1,6 +1,7 @@
 import type { CableCamState } from './types.js';
 import { CablesLayer } from './view/layers/cables.js';
 import { CarriageLayer } from './view/layers/carriage.js';
+import { MovementVectorLayer } from './view/layers/movement-vector.js';
 import { SupportLineLayer } from './view/layers/support-line.js';
 import { Renderer } from './view/renderer.js';
 
@@ -30,6 +31,7 @@ const renderer = new Renderer(ctx, canvas, [
     new SupportLineLayer(),
     new CablesLayer(),
     new CarriageLayer(),
+    new MovementVectorLayer(),
 ]);
 
 // The WebSocket pushes ~60 messages per second, but we render on the browser's
