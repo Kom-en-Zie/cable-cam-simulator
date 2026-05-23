@@ -1,5 +1,5 @@
-import { pointToCanvasPoint } from './view/coordinates-utils.js';
-import type { CableCamState, CanvasPoint, Point } from './types.js';
+import type { CableCamState, Point } from './types.js';
+import { Viewport } from './view/viewport.js';
 
 function getCanvas(): HTMLCanvasElement {
     const el = document.getElementById('simCanvas');
@@ -17,18 +17,14 @@ function get2DContext(canvas: HTMLCanvasElement): CanvasRenderingContext2D {
     return ctx;
 }
 
-function toCanvas(point: Point, aPos: Point): CanvasPoint {
-    return pointToCanvasPoint(point, aPos);
-}
-
 function drawSupportLine(
     ctx: CanvasRenderingContext2D,
+    viewport: Viewport,
     p1: Point,
     p2: Point,
-    aPos: Point,
 ): void {
-    const start = toCanvas(p1, aPos);
-    const end = toCanvas(p2, aPos);
+    const start = viewport.worldToScreen(p1);
+    const end = viewport.worldToScreen(p2);
 
     ctx.strokeStyle = '#555';
     ctx.setLineDash([5, 5]);
@@ -41,13 +37,13 @@ function drawSupportLine(
 
 function drawCable(
     ctx: CanvasRenderingContext2D,
+    viewport: Viewport,
     p1: Point,
     p2: Point,
     color: string,
-    aPos: Point,
 ): void {
-    const start = toCanvas(p1, aPos);
-    const end = toCanvas(p2, aPos);
+    const start = viewport.worldToScreen(p1);
+    const end = viewport.worldToScreen(p2);
 
     ctx.strokeStyle = color;
     ctx.lineWidth = 3;
@@ -62,8 +58,12 @@ function drawCable(
     ctx.fill();
 }
 
-function drawCarriage(ctx: CanvasRenderingContext2D, cPos: Point, aPos: Point): void {
-    const pos = toCanvas(cPos, aPos);
+function drawCarriage(
+    ctx: CanvasRenderingContext2D,
+    viewport: Viewport,
+    cPos: Point,
+): void {
+    const pos = viewport.worldToScreen(cPos);
     ctx.fillStyle = '#f1c40f';
     ctx.fillRect(pos.x - 10, pos.y - 5, 20, 10);
 
@@ -81,12 +81,17 @@ function draw(
     canvas: HTMLCanvasElement,
     state: CableCamState,
 ): void {
+    const viewport = new Viewport(
+        { width: canvas.width, height: canvas.height },
+        state.aPos,
+    );
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    drawSupportLine(ctx, state.oPos, state.aPos, state.aPos);
-    drawCable(ctx, state.oPos, state.cPos, '#3498db', state.aPos);
-    drawCable(ctx, state.aPos, state.cPos, '#e74c3c', state.aPos);
-    drawCarriage(ctx, state.cPos, state.aPos);
+    drawSupportLine(ctx, viewport, state.oPos, state.aPos);
+    drawCable(ctx, viewport, state.oPos, state.cPos, '#3498db');
+    drawCable(ctx, viewport, state.aPos, state.cPos, '#e74c3c');
+    drawCarriage(ctx, viewport, state.cPos);
 }
 
 const canvas = getCanvas();
