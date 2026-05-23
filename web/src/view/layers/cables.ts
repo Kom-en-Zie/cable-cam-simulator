@@ -1,10 +1,14 @@
 import type { CableCamState, Point } from '../../types.js';
 import type { Layer } from '../renderer.js';
+import type { Coordinate } from '../util/coordinate.js';
+import { drawLine } from '../util/draw-line.js';
 import type { Viewport } from '../viewport.js';
 
 const LEFT_CABLE_COLOR = '#3498db';
 const RIGHT_CABLE_COLOR = '#e74c3c';
+const CABLE_WIDTH_PX = 3;
 const ANCHOR_RADIUS_PX = 4;
+const ANCHOR_COLOR = 'white';
 
 /** The two cables running from each anchor pole to the carriage. */
 export class CablesLayer implements Layer {
@@ -23,16 +27,14 @@ export class CablesLayer implements Layer {
         const start = viewport.worldToScreen(anchor);
         const end = viewport.worldToScreen(carriage);
 
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.moveTo(start.x, start.y);
-        ctx.lineTo(end.x, end.y);
-        ctx.stroke();
+        drawLine(ctx, start, end, { color, width: CABLE_WIDTH_PX });
+        this.drawAnchorDot(ctx, start);
+    }
 
-        ctx.fillStyle = 'white';
+    private drawAnchorDot(ctx: CanvasRenderingContext2D, center: Coordinate): void {
+        ctx.fillStyle = ANCHOR_COLOR;
         ctx.beginPath();
-        ctx.arc(start.x, start.y, ANCHOR_RADIUS_PX, 0, Math.PI * 2);
+        ctx.arc(center.x, center.y, ANCHOR_RADIUS_PX, 0, Math.PI * 2);
         ctx.fill();
     }
 }

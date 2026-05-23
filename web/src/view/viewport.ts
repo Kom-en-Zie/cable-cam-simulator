@@ -1,4 +1,5 @@
-import type { CanvasPoint, Point } from '../types.js';
+import type { Point } from '../types.js';
+import { Coordinate } from './util/coordinate.js';
 
 const PADDING_PX = 16;
 
@@ -22,10 +23,10 @@ export class Viewport {
         this.originY = PADDING_PX + Math.max(aPos.y, 0) * this.ratio;
     }
 
-    worldToScreen(point: Point): CanvasPoint {
-        return {
-            x: this.originX + point.x * this.ratio,
-            y: this.originY - point.y * this.ratio,
-        };
+    worldToScreen(point: Point): Coordinate {
+        return new Coordinate(
+            this.originX + point.x * this.ratio,
+            this.originY - point.y * this.ratio,
+        );
     }
 }

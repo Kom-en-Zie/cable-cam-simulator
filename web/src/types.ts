@@ -59,9 +59,3 @@ export interface CableCamState {
     readonly l2: Line;
     readonly movementVector: MovementVector;
 }
-
-/** Browser-only 2D point used by the rendering layer. */
-export interface CanvasPoint {
-    readonly x: number;
-    readonly y: number;
-}
