@@ -3,6 +3,7 @@ package nl.komenzie.cableCam
 import kotlinx.serialization.json.Json
 import nl.komenzie.cableCam.cartState.CartConfig
 import nl.komenzie.cableCam.cartState.CartState
+import nl.komenzie.cableCam.cartState.getDesiredState
 import nl.komenzie.cableCam.geometry.Line
 import nl.komenzie.cableCam.geometry.Point
 import nl.komenzie.cableCam.movementVector.MovementVector
@@ -71,7 +72,8 @@ class CableCamState(
             cPos,
             l1,
             l2,
-            movementVector
+            movementVector,
+            getDesiredState(),
         )
         return Json.encodeToString(immutable)
     }

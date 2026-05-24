@@ -1,6 +1,7 @@
 import type { CableCamState } from './types.js';
 import { CablesLayer } from './view/layers/cables.js';
 import { CarriageLayer } from './view/layers/carriage.js';
+import { DesiredStateLayer } from './view/layers/desired-state.js';
 import { MovementVectorLayer } from './view/layers/movement-vector.js';
 import { SupportLineLayer } from './view/layers/support-line.js';
 import { Renderer } from './view/renderer.js';
@@ -28,6 +29,7 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 const renderer = new Renderer(ctx, canvas, [
+    new DesiredStateLayer(),
     new SupportLineLayer(),
     new CablesLayer(),
     new CarriageLayer(),
