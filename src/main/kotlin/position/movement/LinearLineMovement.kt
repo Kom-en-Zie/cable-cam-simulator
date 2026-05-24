@@ -5,8 +5,9 @@ import nl.komenzie.cableCam.geometry.Line
 import nl.komenzie.cableCam.geometry.Point
 import nl.komenzie.cableCam.movementVector.MovementVector
 import nl.komenzie.cableCam.util.time.toSeconds
+import kotlin.math.cos
 import kotlin.math.pow
-import kotlin.math.sqrt
+import kotlin.math.sin
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
@@ -36,9 +37,9 @@ class LinearLineMovement(
     }
 
     private fun calculateRelativePos(relativeTime: Duration): Point {
-        // c = sqrt (a^2 + b^2) with a=b -> c = sqrt(2) * a -> a = c / sqrt(2)
-        val traveledXandY = calculateDistanceToStart(relativeTime) / sqrt(2.0)
-        return Point(traveledXandY, traveledXandY)
+        val distance = calculateDistanceToStart(relativeTime)
+        val theta = track.angle.radians
+        return Point(distance * cos(theta), distance * sin(theta))
     }
 
     private fun calculateDistanceToStart(relativeTime: Duration): Double {
