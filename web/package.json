@@ -1,0 +1,15 @@
+{
+  "name": "cable-cam-simulator-web",
+  "version": "1.0.0",
+  "description": "TypeScript front-end for the Cable Cam Simulator.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "clean": "rm -rf ../src/main/resources/web/script.js ../src/main/resources/web/script.js.map ../src/main/resources/web/types.js ../src/main/resources/web/types.js.map ../src/main/resources/web/rendering ../src/main/resources/web/constants"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0"
+  }
+}

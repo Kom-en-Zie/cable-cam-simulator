@@ -45,3 +45,9 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### Node / TypeScript front-end ###
+web/node_modules/
+# Compiled TypeScript output served by Ktor — rebuild with `npm run build`.
+src/main/resources/web/**/*.js
+src/main/resources/web/**/*.js.map
