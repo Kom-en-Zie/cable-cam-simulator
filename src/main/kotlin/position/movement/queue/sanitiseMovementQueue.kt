@@ -6,7 +6,7 @@ fun MovementQueue.sanitiseMovementQueue() {
     val movementArray = this.toArray()
     var currentEndTime: Duration? = null
     movementArray.forEach { m ->
-        if (this.cableCamState.timeState.timePassed < m.startTime + m.endTime) {
+        if (this.cableCamState.timeState.timePassed >= m.endTime) {
             return@forEach this.removeElement(m)
         }
         if (currentEndTime != null && m.startTime < currentEndTime) {
