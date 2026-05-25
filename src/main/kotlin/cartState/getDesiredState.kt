@@ -5,7 +5,7 @@ import nl.komenzie.cableCam.position.movement.queue.getCurrentMovement
 
 fun CableCamState.getDesiredState(): CartState? {
     val movement = this.movementQueue.getCurrentMovement()
-    movement ?: return null
+        ?: return this.movementQueue.lastReached
 
     return movement.calculatedDesiredCartState(this.timeState.timePassed)
 }
