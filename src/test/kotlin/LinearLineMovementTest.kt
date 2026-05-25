@@ -3,7 +3,6 @@ package nl.komenzie.cableCam
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
-import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import nl.komenzie.cableCam.cartState.CartConfig
 import nl.komenzie.cableCam.cartState.getDesiredState
@@ -24,7 +23,7 @@ class LinearLineMovementTest {
         75.0, 110.0,
         MotorState(MotorProperties(1500.0, 3.5), 0.0),
         MotorState(MotorProperties(1500.0, 3.5), 0.0),
-        CartConfig(maxSpeed = 25.0, acceleration = 5.0),
+        CartConfig(maxSpeed = 25.0, maxAcceleration = 5.0),
         TimeState(),
     )
 
