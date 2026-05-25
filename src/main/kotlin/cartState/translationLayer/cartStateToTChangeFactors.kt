@@ -12,10 +12,10 @@ fun CartState.toTChangeFactors(targetPos: Point): TChangeFactors {
     val (currentT1, currentT2) = position.calculateT1T2()
     val (targetT1, targetT2) = targetPos.calculateT1T2()
 
-    val diffT1 = abs(targetT1 - currentT1)
-    val diffT2 = abs(targetT2 - currentT2)
-    val total = diffT1 + diffT2
-    if (total == 0.0) return TChangeFactors(0.5, 0.5)
+    val diffT1 = targetT1 - currentT1
+    val diffT2 = targetT2 - currentT2
+    val total = abs(diffT1) + abs(diffT2)
+    if (total == 0.0) return TChangeFactors(0.0, 0.0)
 
     return TChangeFactors(
         changeT1Factor = diffT1 / total,
