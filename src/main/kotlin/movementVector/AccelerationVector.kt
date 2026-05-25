@@ -14,7 +14,7 @@ import kotlin.time.Duration
  */
 @Serializable
 class AccelerationVector(
-    val angle: Angle,
+    override val angle: Angle,
     val acceleration: Double,
-) {
+): TranslationVector {
 }

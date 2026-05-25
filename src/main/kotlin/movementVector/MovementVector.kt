@@ -14,9 +14,9 @@ import kotlin.time.Duration
  */
 @Serializable
 class MovementVector(
-    val angle: Angle,
+    override val angle: Angle,
     val speed: Double,
-) {
+): TranslationVector {
     fun newPos(startPos: Point, time: Duration): Point {
         val distance = speed * time.toSeconds()
         val dx = distance * cos(angle.radians)
