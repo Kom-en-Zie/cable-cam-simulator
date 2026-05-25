@@ -1,6 +1,7 @@
 package nl.komenzie.cableCam.movementVector
 
 import nl.komenzie.cableCam.CableCamState
+import nl.komenzie.cableCam.constants.DT
 import nl.komenzie.cableCam.geometry.Line
 import nl.komenzie.cableCam.position.calculateCPos
 import kotlin.math.abs
@@ -21,6 +22,6 @@ fun CableCamState.calculateMovementVector(): MovementVector {
 
     return MovementVector(
         angle = Line(this.cPos, progressedCPos).angle,
-        speed = distance,   // m/s with s=1
+        speed = distance * DT,
     )
 }
