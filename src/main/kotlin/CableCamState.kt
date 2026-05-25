@@ -40,6 +40,8 @@ class CableCamState(
     // Properties that are not in the ImmutableState
     val currentCartState: CartState get() = CartState(cPos, movementVector)
     val movementQueue: MovementQueue = MovementQueue(this)
+    var integralError: Double = 0.0
+    var lastError: Double = 0.0
 
     /**
      * @param deltaTime The time progression that needs to be processed
