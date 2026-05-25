@@ -19,4 +19,8 @@ class MovementQueue(
     fun getFirst(): Movement? {
         return queue.firstOrNull()
     }
+
+    fun add(movement: Movement) {
+        queue.addLast(movement)
+    }
 }
