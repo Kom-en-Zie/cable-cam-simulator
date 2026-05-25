@@ -13,19 +13,18 @@ import nl.komenzie.cableCam.exception.InvalidCableCamStateException
 import nl.komenzie.cableCam.geometry.Point
 import nl.komenzie.cableCam.parts.motors.MotorProperties
 import nl.komenzie.cableCam.parts.motors.MotorState
+import nl.komenzie.cableCam.position.movement.LinearLineMovement
 import nl.komenzie.cableCam.time.TimeState
 import java.lang.Thread.sleep
+import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 import kotlin.time.toJavaDuration
 
 fun main() {
-    // 1. Shared state that is thread-safe
     var latestStateJson = ""
-
     var webClientConnected = false
 
-    // 2. Start Ktor in a background thread
     embeddedServer(Netty, port = 8080) {
         install(WebSockets)
         routing {
@@ -44,7 +43,6 @@ fun main() {
             }
         }
     }.start(wait = false)
-
 
     val simulationSpeed = 1.0
     val calculationIncrements = 10.toDuration(DurationUnit.MILLISECONDS)
@@ -65,14 +63,8 @@ fun main() {
         // TODO: come up with good starting values for t1 & t2
         75.0,
         110.0,
-        MotorState(
-            motorProperties,
-            0.0,
-        ),
-        MotorState(
-            motorProperties,
-            0.0,
-        ),
+        MotorState(motorProperties, 0.0),
+        MotorState(motorProperties, 0.0),
         CartConfig(
             maxSpeed = 25.0,
             acceleration = 5.0,
@@ -80,28 +72,56 @@ fun main() {
         timeState,
     )
 
-    while (true) {
-        try {
-            latestStateJson = cableCamState.toJson()
-        } catch (e: InvalidCableCamStateException) {
-            println("ERROR: " + e.message)
+    // Wait for the first client so timePassed doesn't advance into thin air.
+    println("Waiting for a web client to connect...")
+    while (!webClientConnected) sleep(100)
+
+    // Run the simulation autonomously on a daemon thread so timePassed (and
+    // therefore the desired state from the movement queue) advances in real
+    // time. The main thread's readln() would otherwise block ticks indefinitely.
+    Thread {
+        while (true) {
+            try {
+                latestStateJson = cableCamState.toJson()
+            } catch (e: InvalidCableCamStateException) {
+                println("ERROR: " + e.message)
+            }
+
+            sleep(realTimeIncrementJavaDuration)
+            cableCamState.update(calculationIncrements)
         }
+    }.apply {
+        isDaemon = true
+        name = "cable-cam-sim"
+    }.start()
 
-        sleep(realTimeIncrementJavaDuration)
+    // Input loop: each "x;y" line enqueues a LinearLineMovement from the end
+    // of the previously-queued movement to (x, y). Chaining from the last
+    // enqueued endpoint (rather than from cableCamState.cPos) means new
+    // targets pick up where the desired-state trajectory left off — the
+    // actual carriage doesn't move on its own yet, so cPos would otherwise
+    // make every new movement restart from the same spot.
+    var lastQueuedEnd: Point = cableCamState.cPos
+    var lastQueuedEndTime: Duration = cableCamState.timeState.timePassed
 
-        if (!webClientConnected) println("Waiting for a web client to connect...")
-        while (!webClientConnected) sleep(realTimeIncrementJavaDuration)
-
-        print("new input coordinates (t1;t2): ")
+    while (true) {
+        print("new target coordinates (x;y): ")
         val manualInput = readln()
         try {
-            val (t1, t2) = manualInput.split(";").map { it.toDouble() }
-            cableCamState.t1 = t1
-            cableCamState.t2 = t2
+            val (x, y) = manualInput.split(";").map { it.toDouble() }
+            val newStartTime = maxOf(lastQueuedEndTime, cableCamState.timeState.timePassed)
+            val movement = LinearLineMovement(
+                cPosStart = lastQueuedEnd,
+                cPosEnd = Point(x, y),
+                startTime = newStartTime,
+                speed = cableCamState.cartConfig.maxSpeed,
+                acceleration = cableCamState.cartConfig.acceleration,
+            )
+            cableCamState.movementQueue.add(movement)
+            lastQueuedEnd = movement.cPosEnd
+            lastQueuedEndTime = movement.endTime
         } catch (_: NumberFormatException) {
-            println("invalid input format, please enter t1;t2")
+            println("invalid input format, please enter x;y")
         }
-
-        cableCamState.update(calculationIncrements)
     }
 }

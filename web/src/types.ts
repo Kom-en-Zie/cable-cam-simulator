@@ -35,6 +35,15 @@ export interface MovementVector {
     readonly speed: number;
 }
 
+/**
+ * Target position + velocity the driver should match. Null when no
+ * movement is currently queued.
+ */
+export interface CartState {
+    readonly position: Point;
+    readonly movementVector: MovementVector;
+}
+
 export interface TimeState {
     /** kotlinx-serialization emits {@link kotlin.time.Duration} as an ISO-8601 string (e.g. "PT1.234S"). */
     readonly timePassed: string;
@@ -58,4 +67,5 @@ export interface CableCamState {
     readonly l1: Line;
     readonly l2: Line;
     readonly movementVector: MovementVector;
+    readonly desiredState: CartState | null;
 }
