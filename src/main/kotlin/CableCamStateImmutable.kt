@@ -1,6 +1,7 @@
 package nl.komenzie.cableCam
 
 import kotlinx.serialization.Serializable
+import nl.komenzie.cableCam.cartState.CartState
 import nl.komenzie.cableCam.geometry.Line
 import nl.komenzie.cableCam.geometry.Point
 import nl.komenzie.cableCam.movementVector.MovementVector
@@ -26,4 +27,5 @@ data class CableCamStateImmutable(
     val l1: Line,
     val l2: Line,
     val movementVector: MovementVector,
+    val desiredState: CartState?,
 )

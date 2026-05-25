@@ -11,6 +11,12 @@ abstract class Movement(
     val speed: Double,
     val acceleration: Double,
 ) {
+    abstract val totalTime: Duration
+
+    // Must stay a computed property: `totalTime` is `abstract`, so it is set by
+    // the subclass *after* this base class initializes. A `val endTime = ...`
+    // would capture Duration.ZERO at base-init time.
+    val endTime: Duration get() = startTime + totalTime
 
     /**
      * @param relativeTime The time progression that needs to be processed (currentTime - startTime)
