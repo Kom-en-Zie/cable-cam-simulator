@@ -66,10 +66,10 @@ class LinearLineMovementTest {
 
     /**
      * End-to-end: when a movement is queued, the desired state advances smoothly along the
-     * track, reaches the midpoint at totalTime/2, and is sanitised away once endTime passes.
+     * track and reaches the midpoint at totalTime/2.
      */
     @Test
-    fun desiredStateAdvancesAndExpires() {
+    fun desiredStateAdvancesAlongTrack() {
         val state = freshState()
         val start = state.cPos
         val movement = linearMovement(start, Point(20.0, -12.0), state.timeState.timePassed)
@@ -79,8 +79,21 @@ class LinearLineMovementTest {
         val mid = state.getDesiredState()!!.position
         val midDistance = sqrt((mid.x - start.x).let { it * it } + (mid.y - start.y).let { it * it })
         assertEquals(movement.trackLength / 2, midDistance, 1e-3)
+    }
 
-        state.update(movement.totalTime / 2 + 10.toDuration(DurationUnit.MILLISECONDS))
-        assertNull(state.getDesiredState())
+    /** After a movement finishes, the desired state stays at its end-point at rest. */
+    @Test
+    fun desiredStatePersistsAtEndOfMovement() {
+        val state = freshState()
+        val target = Point(20.0, -12.0)
+        val movement = linearMovement(state.cPos, target, state.timeState.timePassed)
+        state.movementQueue.add(movement)
+
+        // Advance well past endTime; the active queue should clear but the
+        // last-reached state should keep getDesiredState non-null.
+        state.update(movement.totalTime + 1.toDuration(DurationUnit.SECONDS))
+        val resting = state.getDesiredState()
+        assertEquals(target, resting!!.position)
+        assertEquals(0.0, resting.movementVector.speed, 1e-9)
     }
 }
