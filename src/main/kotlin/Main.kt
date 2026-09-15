@@ -17,6 +17,7 @@ import nl.komenzie.cableCam.position.movement.LinearLineMovement
 import nl.komenzie.cableCam.time.TimeState
 import java.lang.Thread.sleep
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 import kotlin.time.toJavaDuration
@@ -38,7 +39,7 @@ fun main() {
                 while (true) {
                     // Send the current state to the browser every 16ms (~60fps)
                     send(latestStateJson)
-                    delay(16)
+                    delay(16.milliseconds)
                 }
             }
         }
