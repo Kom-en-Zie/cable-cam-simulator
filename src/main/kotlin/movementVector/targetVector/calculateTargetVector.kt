@@ -5,7 +5,6 @@ import nl.komenzie.cableCam.cartState.getDesiredState
 import nl.komenzie.cableCam.constants.DT
 import nl.komenzie.cableCam.geometry.Angle
 import nl.komenzie.cableCam.movementVector.AccelerationVector
-import nl.komenzie.cableCam.movementVector.MovementVector
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
