@@ -1,58 +1,33 @@
-package nl.komenzie.cableCam.movementVector.inBetweenVector
+package nl.komenzie.cableCam.movementVector.targetVector
 
 import nl.komenzie.cableCam.CableCamState
 import nl.komenzie.cableCam.cartState.getDesiredState
-import nl.komenzie.cableCam.constants.DT
-import nl.komenzie.cableCam.geometry.Angle
-import nl.komenzie.cableCam.movementVector.AccelerationVector
-import kotlin.math.atan2
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.sqrt
+import nl.komenzie.cableCam.geometry.Line
+import nl.komenzie.cableCam.movementVector.MovementVector
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
-fun CableCamState.inBetweenVector(): AccelerationVector {
-    val carPosx = this.currentCartState.position.x
-    val carPosy = this.currentCartState.position.y
+fun CableCamState.calculateTargetVector(): MovementVector {
+    val desiredState = this.getDesiredState() ?: this.currentCartState
 
-    val desiredState = this.getDesiredState()
-    if (desiredState == null) {
-        return AccelerationVector(Angle(0.0), 0.0)
-    }
-    val desiredPosx = desiredState.position.x
-    val desiredPosy = desiredState.position.y
+    // Get distance between actual and desired state
+    val distance = Line(this.cPos, desiredState.position).length
 
-    val desiredAngleRad = desiredState.movementVector.angle.radians
-    val desiredSpeed = desiredState.movementVector.speed
+    // Extend length of desired vector (copy) by the distance
+    val extendedDesiredVector = MovementVector(
+        desiredState.movementVector.angle,
+        desiredState.movementVector.speed + distance,
+    )
 
-    val goalPosx = desiredPosx + cos(desiredAngleRad) * desiredSpeed * DT
-    val goalPosy = desiredPosy + sin(desiredAngleRad) * desiredSpeed * DT
+    // Get the point at the end of the new desired vector
+    val targetPoint = extendedDesiredVector.newPos(desiredState.position, 1.toDuration(DurationUnit.SECONDS))
 
-    val movementAngle = atan2(goalPosy - carPosy, goalPosx - carPosx)
-
-    val deltaX = goalPosx - carPosx
-    val deltaY = goalPosy - carPosy
-    val currentError = sqrt((deltaX * deltaX) + (deltaY * deltaY))
-
-    val Kp = 0.5
-    val Ki = 0.01
-    val Kd = 0.1
-
-    val pTerm = Kp * currentError
-
-    this.integralError += currentError * DT
-    val iTerm = Ki * this.integralError
-
-    val derivative = (currentError - this.lastError) / DT
-    val dTerm = Kd * derivative
-
-    this.lastError = currentError
-
-    val calculatedAcceleration = pTerm + iTerm + dTerm
-
-
-    return AccelerationVector(Angle(movementAngle), calculatedAcceleration)
-
-
-
-    TODO()
+    // Create a vector that runs from actual to the calculated point (and return it)
+    val lineActualToTarget = Line(this.currentCartState.position, targetPoint)
+    val angleActualToTarget = lineActualToTarget.angle
+    val distanceActualToTarget = lineActualToTarget.length
+    return MovementVector(
+        angleActualToTarget,
+        distanceActualToTarget,
+    )
 }
