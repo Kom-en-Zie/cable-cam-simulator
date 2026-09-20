@@ -4,7 +4,6 @@ import nl.komenzie.cableCam.CableCamState
 import nl.komenzie.cableCam.cartState.getDesiredState
 import nl.komenzie.cableCam.geometry.Line
 import nl.komenzie.cableCam.movementVector.MovementVector
-import kotlin.math.min
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
@@ -13,8 +12,7 @@ fun CableCamState.calculateTargetVector(): MovementVector {
 
     val distance = Line(this.cPos, desiredState.position).length
     val speed = desiredState.movementVector.speed
-    var distanceToAdd = distance
-    if (speed < 0.05) distanceToAdd = 0.0
+    val distanceToAdd = distance * (speed / 0.05).coerceIn(0.0, 1.0)
     val extendedDesiredVector = MovementVector(
         desiredState.movementVector.angle,
         speed + distanceToAdd,
