@@ -55,7 +55,7 @@ fun main() {
 
     val motorProperties = MotorProperties(
         1500.0,
-        3.5,
+        15.0,
     )
 
     val cableCamState = CableCamState(
