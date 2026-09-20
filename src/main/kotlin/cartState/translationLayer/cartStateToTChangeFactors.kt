@@ -8,9 +8,9 @@ import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
 
-fun CartState.toTChangeFactors(targetPos: Point): TChangeFactors {
-    val (currentT1, currentT2) = position.calculateT1T2()
-    val (targetT1, targetT2) = targetPos.calculateT1T2()
+fun CartState.toTChangeFactors(targetPos: Point, aPos: Point): TChangeFactors {
+    val (currentT1, currentT2) = position.calculateT1T2(aPos)
+    val (targetT1, targetT2) = targetPos.calculateT1T2(aPos)
 
     val diffT1 = targetT1 - currentT1
     val diffT2 = targetT2 - currentT2
@@ -23,10 +23,10 @@ fun CartState.toTChangeFactors(targetPos: Point): TChangeFactors {
     )
 }
 
-fun CartState.toTChangeFactors(translationVector: TranslationVector): TChangeFactors {
+fun CartState.toTChangeFactors(translationVector: TranslationVector, aPos: Point): TChangeFactors {
     val targetPos = Point(
         x = position.x + cos(translationVector.angle.radians),
         y = position.y + sin(translationVector.angle.radians),
     )
-    return toTChangeFactors(targetPos)
+    return toTChangeFactors(targetPos, aPos)
 }

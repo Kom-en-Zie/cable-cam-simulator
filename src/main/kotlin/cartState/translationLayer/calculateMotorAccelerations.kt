@@ -10,7 +10,7 @@ import nl.komenzie.cableCam.movementVector.targetVector.calculateTargetAccelerat
  */
 fun CableCamState.calculateMotorAccelerations(): Pair<Double, Double> {
     val targetAcceleration = calculateTargetAccelerationVector()
-    val changeFactors = currentCartState.toTChangeFactors(targetAcceleration)
+    val changeFactors = currentCartState.toTChangeFactors(targetAcceleration, aPos)
 
     val motor1Acceleration = (changeFactors.changeT1Factor * targetAcceleration.acceleration)
         .coerceIn(-motor1State.properties.maxAcceleration, motor1State.properties.maxAcceleration)
