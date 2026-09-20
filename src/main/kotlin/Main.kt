@@ -13,10 +13,13 @@ import nl.komenzie.cableCam.exception.InvalidCableCamStateException
 import nl.komenzie.cableCam.geometry.Point
 import nl.komenzie.cableCam.parts.motors.MotorProperties
 import nl.komenzie.cableCam.parts.motors.MotorState
+import nl.komenzie.cableCam.parts.motors.driver.MotorDriver
+import nl.komenzie.cableCam.parts.motors.driver.SimulatedMotorDriver
 import nl.komenzie.cableCam.position.movement.LinearLineMovement
 import nl.komenzie.cableCam.time.TimeState
 import java.lang.Thread.sleep
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 import kotlin.time.toJavaDuration
@@ -38,7 +41,7 @@ fun main() {
                 while (true) {
                     // Send the current state to the browser every 16ms (~60fps)
                     send(latestStateJson)
-                    delay(16)
+                    delay(16.milliseconds)
                 }
             }
         }
@@ -52,7 +55,7 @@ fun main() {
 
     val motorProperties = MotorProperties(
         1500.0,
-        3.5,
+        15.0,
     )
 
     val cableCamState = CableCamState(
@@ -67,7 +70,7 @@ fun main() {
         MotorState(motorProperties, 0.0),
         CartConfig(
             maxSpeed = 25.0,
-            maxAcceleration = 5.0,
+            maxAcceleration = 2.0,
         ),
         timeState,
     )
@@ -95,6 +98,12 @@ fun main() {
         name = "cable-cam-sim"
     }.start()
 
+    // Stands in for the real machine that will one day drive the motors over USB.
+    // Swapping this for a real driver (behind the same MotorDriver interface) is
+    // the point where simulation and hardware modes will diverge.
+    val motorDriver: MotorDriver = SimulatedMotorDriver(cableCamState)
+    motorDriver.start()
+
     // Input loop: each "x;y" line enqueues a LinearLineMovement from the end
     // of the previously-queued movement to (x, y). Chaining from the last
     // enqueued endpoint (rather than from cableCamState.cPos) means new
@@ -115,7 +124,7 @@ fun main() {
                 cPosEnd = Point(x, y),
                 startTime = newStartTime,
                 speed = cableCamState.cartConfig.maxSpeed,
-                acceleration = cableCamState.cartConfig.maxAcceleration,
+                acceleration = cableCamState.cartConfig.maxAcceleration - 1.0,
             )
             cableCamState.movementQueue.add(movement)
             lastQueuedEnd = movement.cPosEnd

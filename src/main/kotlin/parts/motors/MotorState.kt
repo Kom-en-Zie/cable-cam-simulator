@@ -11,7 +11,7 @@ import kotlin.time.Duration
 @Serializable
 class MotorState(
     val properties: MotorProperties,
-    var speed: Double,
+    @Volatile var speed: Double,
 ) {
     fun getPassedCableLength(deltaTime: Duration): Double {
         return speed * deltaTime.toSeconds()
