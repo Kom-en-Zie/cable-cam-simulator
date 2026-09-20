@@ -10,13 +10,11 @@ import kotlin.time.toDuration
 fun CableCamState.calculateTargetVector(): MovementVector {
     val desiredState = this.getDesiredState() ?: this.currentCartState
 
-    // Get distance between actual and desired state
     val distance = Line(this.cPos, desiredState.position).length
-
-    // Extend length of desired vector (copy) by the distance
+    val speed = desiredState.movementVector.speed
     val extendedDesiredVector = MovementVector(
         desiredState.movementVector.angle,
-        desiredState.movementVector.speed + distance,
+        speed + (distance * speed),
     )
 
     // Get the point at the end of the new desired vector
