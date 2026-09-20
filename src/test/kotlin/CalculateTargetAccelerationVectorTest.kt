@@ -15,20 +15,18 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
- * Regression tests for a bug where `calculateTargetVector` extended the position-gap
- * correction along `desiredState.movementVector.angle` — the movement queue's own
- * per-segment track angle. That's only meaningful while a movement is actively
- * playing, and caused two symptoms:
- *  - overshoot that never got braked, because the "target" kept extending further
- *    along the original track direction even once the cart had already passed it;
- *  - a wild direction change after re-queuing the exact same point the cart had just
- *    reached, since that produces a zero-length movement whose `track.angle` is the
- *    arbitrary `atan2(0,0) = 0`.
- * The fix uses the gap's own direction (`Line(cPos, desiredState.position).angle`)
- * instead — a resting desired state always has speed 0, so this changes nothing while
- * a movement is actively tracking well, but fixes both broken cases exactly. The
- * control law is otherwise unchanged, so it's still underdamped/oscillatory before it
- * settles — these tests allow for that rather than asserting fast, tight convergence.
+ * End-to-end regression tests for the closed loop actually converging on a queued
+ * target: settling without runaway divergence, and not spiking off after a duplicate
+ * identical input (which chains into a degenerate, zero-length `LinearLineMovement`).
+ *
+ * The thresholds here are deliberately tight — tightened specifically to catch a bug
+ * where `calculateMotorAccelerations` multiplied the *normalized* `changeT1Factor`/
+ * `changeT2Factor` (which sum to 1 by absolute value) directly by an absolute
+ * acceleration magnitude, instead of scaling back up by `totalChangeMagnitude` first.
+ * That silently applied only a fraction of the intended acceleration (a fraction that
+ * varies by direction and position), which on this exact scenario left the cart
+ * settling ~0.018 units off target instead of converging tightly. See
+ * `ToTChangeFactorsTest` for a unit-level check of the same fix.
  */
 class CalculateTargetAccelerationVectorTest {
     private fun freshState() = CableCamState(
@@ -72,14 +70,11 @@ class CalculateTargetAccelerationVectorTest {
         val target = Point(10.0, -5.0)
         enqueue(state, state.cPos, target)
 
-        // 30s: this control law is underdamped and takes a while to settle, but with
-        // the fix it does settle — the bug it regresses against made it diverge
-        // instead (still ~4+ units away and moving further off after this long).
-        tick(state, 3000, 10.milliseconds)
+        tick(state, 3000, 10.milliseconds) // 30s
 
         val finalDistance = Line(state.cPos, target).length
         assertTrue(
-            finalDistance < 0.3,
+            finalDistance < 0.01,
             "expected the cart to settle close to the target, got distance=$finalDistance",
         )
     }
@@ -92,7 +87,7 @@ class CalculateTargetAccelerationVectorTest {
         tick(state, 3000, 10.milliseconds)
 
         val distanceAfterFirstApproach = Line(state.cPos, target).length
-        assertTrue(distanceAfterFirstApproach < 0.3)
+        assertTrue(distanceAfterFirstApproach < 0.01)
 
         // Mirrors Main.kt's stdin loop: a repeated identical input chains from
         // lastQueuedEnd == target, producing a zero-length LinearLineMovement.

@@ -12,9 +12,9 @@ fun CableCamState.calculateMotorAccelerations(): Pair<Double, Double> {
     val targetAcceleration = calculateTargetAccelerationVector()
     val changeFactors = currentCartState.toTChangeFactors(targetAcceleration, aPos)
 
-    val motor1Acceleration = (changeFactors.changeT1Factor * targetAcceleration.acceleration)
+    val motor1Acceleration = (changeFactors.changeT1Factor * changeFactors.totalChangeMagnitude * targetAcceleration.acceleration)
         .coerceIn(-motor1State.properties.maxAcceleration, motor1State.properties.maxAcceleration)
-    val motor2Acceleration = (changeFactors.changeT2Factor * targetAcceleration.acceleration)
+    val motor2Acceleration = (changeFactors.changeT2Factor * changeFactors.totalChangeMagnitude * targetAcceleration.acceleration)
         .coerceIn(-motor2State.properties.maxAcceleration, motor2State.properties.maxAcceleration)
 
     return motor1Acceleration to motor2Acceleration
