@@ -13,10 +13,11 @@ fun CableCamState.calculateTargetVector(): MovementVector {
 
     val distance = Line(this.cPos, desiredState.position).length
     val speed = desiredState.movementVector.speed
-    val speedFactor = min(speed, 1.0)
+    var distanceToAdd = distance
+    if (speed < 0.05) distanceToAdd = 0.0
     val extendedDesiredVector = MovementVector(
         desiredState.movementVector.angle,
-        speed + (distance * speedFactor),
+        speed + distanceToAdd,
     )
 
     // Get the point at the end of the new desired vector
