@@ -70,7 +70,7 @@ fun main() {
         MotorState(motorProperties, 0.0),
         CartConfig(
             maxSpeed = 25.0,
-            maxAcceleration = 5.0,
+            maxAcceleration = 2.0,
         ),
         timeState,
     )
@@ -124,7 +124,7 @@ fun main() {
                 cPosEnd = Point(x, y),
                 startTime = newStartTime,
                 speed = cableCamState.cartConfig.maxSpeed,
-                acceleration = cableCamState.cartConfig.maxAcceleration,
+                acceleration = cableCamState.cartConfig.maxAcceleration - 1.0,
             )
             cableCamState.movementQueue.add(movement)
             lastQueuedEnd = movement.cPosEnd
