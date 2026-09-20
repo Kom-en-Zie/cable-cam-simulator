@@ -13,6 +13,8 @@ import nl.komenzie.cableCam.exception.InvalidCableCamStateException
 import nl.komenzie.cableCam.geometry.Point
 import nl.komenzie.cableCam.parts.motors.MotorProperties
 import nl.komenzie.cableCam.parts.motors.MotorState
+import nl.komenzie.cableCam.parts.motors.driver.MotorDriver
+import nl.komenzie.cableCam.parts.motors.driver.SimulatedMotorDriver
 import nl.komenzie.cableCam.position.movement.LinearLineMovement
 import nl.komenzie.cableCam.time.TimeState
 import java.lang.Thread.sleep
@@ -95,6 +97,12 @@ fun main() {
         isDaemon = true
         name = "cable-cam-sim"
     }.start()
+
+    // Stands in for the real machine that will one day drive the motors over USB.
+    // Swapping this for a real driver (behind the same MotorDriver interface) is
+    // the point where simulation and hardware modes will diverge.
+    val motorDriver: MotorDriver = SimulatedMotorDriver(cableCamState)
+    motorDriver.start()
 
     // Input loop: each "x;y" line enqueues a LinearLineMovement from the end
     // of the previously-queued movement to (x, y). Chaining from the last
